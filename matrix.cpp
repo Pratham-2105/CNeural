@@ -66,6 +66,22 @@ struct Matrix {
 
     return new_Matrix;
   }
+
+  Matrix operator-(Matrix &other_Matrix) {
+    if (rows != other_Matrix.rows || cols != other_Matrix.cols) {
+      throw std::invalid_argument("INVALID ROW or COLUMN");
+    }
+
+    Matrix new_Matrix(rows, cols, false);
+
+    for (i64 i = 0; i < rows; ++i) {
+      for (i64 j = 0; j < cols; ++j) {
+        new_Matrix.at(i, j) = at(i, j) - other_Matrix.at(i, j);
+      }
+    }
+
+    return new_Matrix;
+  }
 };
 
 int main() {
