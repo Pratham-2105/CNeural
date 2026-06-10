@@ -82,6 +82,18 @@ struct Matrix {
 
     return new_Matrix;
   }
+
+  Matrix scalar_multiply(f64 scalar_number) {
+    Matrix new_Matrix(rows, cols, false);
+
+    for (i64 i = 0; i < rows; ++i) {
+      for (i64 j = 0; j < cols; ++j) {
+        new_Matrix.at(i, j) = at(i, j) * scalar_number;
+      }
+    }
+
+    return new_Matrix;
+  }
 };
 
 int main() {
@@ -99,10 +111,15 @@ int main() {
   m1.at(1, 0) = 3.0;
   m1.at(1, 1) = 4.0;
 
-  m1.print_matrix();
+  // m1.print_matrix();
 
-  Matrix addition = m0 + m1;
-  addition.print_matrix();
+  /*
+    Matrix addition = m0 + m1;
+    addition.print_matrix();
+  */
+
+  Matrix scalar_multiplication = m0.scalar_multiply(5.0);
+  scalar_multiplication.print_matrix();
 
   return 0;
 }
