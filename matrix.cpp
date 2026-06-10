@@ -23,7 +23,17 @@ struct Matrix {
   i64 rows, cols;
   std::vector<Scalar> matrix;
 
-  Matrix(i64 row, i64 col) : rows(row), cols(col), matrix(row * col, 0.0) {}
+  Matrix(i64 row, i64 col, bool random)
+      : rows(row), cols(col), matrix(row * col) {
+    if (random) {
+      std::mt19937 gen(std::random_device{}());
+      std::uniform_real_distribution<Scalar> dist(-0.5, 0.5);
+
+      for (auto &val : matrix) {
+        val = dist(gen);
+      }
+    }
+  }
 
   Scalar &at(i64 i, i64 j) {
     // TODO add exceptions for out-of-bounds stuff;
@@ -36,16 +46,47 @@ struct Matrix {
       for (i64 j = 0; j < cols; ++j) {
         std::cout << at(i, j) << " ";
       }
-      std::cout << "\n";
+      std::cout << '\n';
     }
+    std::cout << '\n';
+  }
+
+  Matrix operator+(Matrix &other_Matrix) {
+    if (rows != other_Matrix.rows || cols != other_Matrix.cols) {
+      throw std::invalid_argument("INVALID ROW or COLUMN");
+    }
+
+    Matrix new_Matrix(rows, cols, false);
+
+    for (i64 i = 0; i < rows; ++i) {
+      for (i64 j = 0; j < cols; ++j) {
+        new_Matrix.at(i, j) = at(i, j) + other_Matrix.at(i, j);
+      }
+    }
+
+    return new_Matrix;
   }
 };
 
 int main() {
-  Matrix m(2, 3);
-  m.at(0, 0) = 1.0;
-  m.at(1, 2) = 5.0;
-  m.print_matrix();
+  Matrix m0(2, 2, true);
+  m0.at(0, 0) = 1.0;
+  m0.at(0, 1) = 2.0;
+  m0.at(1, 0) = 3.0;
+  m0.at(1, 1) = 4.0;
+
+  m0.print_matrix();
+
+  Matrix m1(2, 2, true);
+  m1.at(0, 0) = 1.0;
+  m1.at(0, 1) = 2.0;
+  m1.at(1, 0) = 3.0;
+  m1.at(1, 1) = 4.0;
+
+  m1.print_matrix();
+
+  Matrix addition = m0 + m1;
+  addition.print_matrix();
 
   return 0;
 }
