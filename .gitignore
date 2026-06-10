@@ -4,6 +4,7 @@
 matrix
 jneural
 jn
+cneural
 
 # Debug
 *.dSYM/
