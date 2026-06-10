@@ -1,0 +1,101 @@
+#include "matrix.hpp"
+
+// ============================================================================
+//  main — usage examples + checks (each verified by hand on known values)
+//  Uncomment a block to run that example.
+// ============================================================================
+int main() {
+  // ---- addition
+  // --------------------------------------------------------------
+  // [[1,2],[3,4]] + [[1,2],[3,4]] = [[2,4],[6,8]]
+  /*
+    Matrix a(2, 2, false);
+    a.at(0, 0) = 1;
+    a.at(0, 1) = 2;
+    a.at(1, 0) = 3;
+    a.at(1, 1) = 4;
+    Matrix b(2, 2, false);
+    b.at(0, 0) = 1;
+    b.at(0, 1) = 2;
+    b.at(1, 0) = 3;
+    b.at(1, 1) = 4;
+    Matrix sum = a + b;
+    sum.print_matrix();
+  */
+  // ---- subtraction
+  // -----------------------------------------------------------
+  // [[5,5],[5,5]] - [[1,2],[3,4]] = [[4,3],[2,1]]
+  /*
+    Matrix a(2, 2, false);
+    a.at(0,0)=5; a.at(0,1)=5; a.at(1,0)=5; a.at(1,1)=5;
+    Matrix b(2, 2, false);
+    b.at(0,0)=1; b.at(0,1)=2; b.at(1,0)=3; b.at(1,1)=4;
+    Matrix diff = a - b;
+    diff.print_matrix();
+  */
+
+  // ---- scalar multiply
+  // -------------------------------------------------------
+  // [[1,2],[3,4]] * 5 = [[5,10],[15,20]]
+  /*
+    Matrix a(2, 2, false);
+    a.at(0,0)=1; a.at(0,1)=2; a.at(1,0)=3; a.at(1,1)=4;
+    Matrix scaled = a.scalar_multiply(5.0);
+    scaled.print_matrix();
+  */
+
+  // ---- matrix multiply
+  // ------------------------------------------------------- (2x3)(3x2):
+  // [[1,2,3],[4,5,6]] * [[7,8],[9,10],[11,12]] = [[58,64],[139,154]]
+  /*
+    Matrix a(2, 3, false);
+    a.at(0,0)=1; a.at(0,1)=2; a.at(0,2)=3;
+    a.at(1,0)=4; a.at(1,1)=5; a.at(1,2)=6;
+    Matrix b(3, 2, false);
+    b.at(0,0)=7;  b.at(0,1)=8;
+    b.at(1,0)=9;  b.at(1,1)=10;
+    b.at(2,0)=11; b.at(2,1)=12;
+    Matrix product = a * b;
+    product.print_matrix();
+  */
+
+  // ---- transpose
+  // -------------------------------------------------------------
+  // [[1,2,3],[4,5,6]] -> [[1,4],[2,5],[3,6]]
+  /*
+    Matrix a(2, 3, false);
+    a.at(0,0)=1; a.at(0,1)=2; a.at(0,2)=3;
+    a.at(1,0)=4; a.at(1,1)=5; a.at(1,2)=6;
+    Matrix t = a.transpose();
+    t.print_matrix();
+  */
+
+  // ---- apply (with a lambda)
+  // ------------------------------------------------- double each element:
+  // [[1,2],[3,4]] -> [[2,4],[6,8]]
+  /*
+    Matrix a(2, 2, false);
+    a.at(0,0)=1; a.at(0,1)=2; a.at(1,0)=3; a.at(1,1)=4;
+    Matrix doubled = a.apply([](Scalar x){ return x * 2; });
+    doubled.print_matrix();
+  */
+
+  // ---- hadamard (element-wise multiply)
+  // --------------------------------------
+  // [[1,2],[3,4]] (.) [[5,6],[7,8]] = [[5,12],[21,32]]
+  /*
+    Matrix a(2, 2, false);
+    a.at(0, 0) = 1;
+    a.at(0, 1) = 2;
+    a.at(1, 0) = 3;
+    a.at(1, 1) = 4;
+    Matrix b(2, 2, false);
+    b.at(0, 0) = 5;
+    b.at(0, 1) = 6;
+    b.at(1, 0) = 7;
+    b.at(1, 1) = 8;
+    Matrix h = a.hadamard(b);
+    h.print_matrix();
+  */
+  return 0;
+}
