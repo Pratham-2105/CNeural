@@ -122,6 +122,18 @@ struct Matrix {
 
     return result_matrix;
   }
+
+  Matrix transpose() {
+    Matrix result(cols, rows, false);
+
+    for (i64 i = 0; i < rows; ++i) {
+      for (i64 j = 0; j < cols; ++j) {
+        result.at(j, i) = at(i, j);
+      }
+    }
+
+    return result;
+  }
 };
 
 int main() {
@@ -163,7 +175,7 @@ int main() {
   a.at(1, 1) = 5;
   a.at(1, 2) = 6;
 
-  a.print_matrix();
+  // a.print_matrix();
 
   Matrix b(3, 2, false);
   b.at(0, 0) = 7;
@@ -176,7 +188,10 @@ int main() {
   b.print_matrix();
 
   Matrix c = a * b;
-  c.print_matrix();
+  // c.print_matrix();
+
+  Matrix d = b.transpose();
+  d.print_matrix();
 
   return 0;
 }
