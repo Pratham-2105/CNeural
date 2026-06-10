@@ -1,0 +1,32 @@
+# Compiled binaries
+*.o
+*.out
+matrix
+jneural
+jn
+
+# Debug
+*.dSYM/
+
+# Build directories
+build/
+bin/
+obj/
+
+# Editor/IDE
+*.swp
+*.swo
+*~
+.vscode/
+.idea/
+compile_commands.json
+compile_flags.txt
+
+# OS
+.DS_Store
+Thumbs.db
+
+# MNIST data (large binary files, download separately)
+data/
+*.idx3-ubyte
+*.idx1-ubyte
