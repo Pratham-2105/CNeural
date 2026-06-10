@@ -134,6 +134,18 @@ struct Matrix {
 
     return result;
   }
+
+  template <typename F> Matrix apply(F func) {
+    Matrix result(rows, cols, false);
+
+    for (i64 i = 0; i < rows; ++i) {
+      for (i64 j = 0; j < cols; ++j) {
+        result.at(i, j) = func(at(i, j));
+      }
+    }
+
+    return result;
+  }
 };
 
 int main() {
@@ -187,11 +199,18 @@ int main() {
 
   b.print_matrix();
 
-  Matrix c = a * b;
-  // c.print_matrix();
-
+  /*
+    Matrix c = a * b;
+    c.print_matrix();
+  */
+  /*
   Matrix d = b.transpose();
   d.print_matrix();
+  */
 
+  /*
+  Matrix apply_matrix = b.apply([](Scalar x) { return x * 2; });
+  apply_matrix.print_matrix();
+  */
   return 0;
 }
