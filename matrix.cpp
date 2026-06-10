@@ -36,12 +36,17 @@ struct Matrix {
   }
 
   Scalar &at(i64 i, i64 j) {
-    // TODO add exceptions for out-of-bounds stuff;
+    if (i < 0 || i >= rows) {
+      throw std::invalid_argument("ROWS ARE out-of-bounds UPON at()");
+    }
+    if (j < 0 || j >= cols) {
+      throw std::invalid_argument("COLS ARE out-of-bounds UPON at()");
+    }
+
     return matrix[i * cols + j];
   }
 
   void print_matrix() {
-    // TODO add exceptions for out-of-bounds stuff;
     for (i64 i = 0; i < rows; ++i) {
       for (i64 j = 0; j < cols; ++j) {
         std::cout << at(i, j) << " ";
@@ -94,32 +99,84 @@ struct Matrix {
 
     return new_Matrix;
   }
+
+  Matrix operator*(Matrix &other_Matrix) {
+    if (cols != other_Matrix.rows) {
+      throw std::invalid_argument(
+          "INVALID DIMENSIONS FOR matrix-multiplication");
+    }
+
+    Matrix result_matrix(rows, other_Matrix.cols, false);
+
+    for (i64 i = 0; i < rows; ++i) {
+      for (i64 j = 0; j < other_Matrix.cols; ++j) {
+        Scalar sum = 0;
+
+        for (i64 k = 0; k < other_Matrix.rows; ++k) {
+          sum += at(i, k) * other_Matrix.at(k, j);
+        }
+
+        result_matrix.at(i, j) = sum;
+      }
+    }
+
+    return result_matrix;
+  }
 };
 
 int main() {
-  Matrix m0(2, 2, true);
-  m0.at(0, 0) = 1.0;
-  m0.at(0, 1) = 2.0;
-  m0.at(1, 0) = 3.0;
-  m0.at(1, 1) = 4.0;
+  /*
+    Matrix m0(2, 2, true);
+    m0.at(0, 0) = 1.0;
+    m0.at(0, 1) = 2.0;
+    m0.at(1, 0) = 3.0;
+    m0.at(1, 1) = 4.0;
 
-  m0.print_matrix();
+    m0.print_matrix();
 
-  Matrix m1(2, 2, true);
-  m1.at(0, 0) = 1.0;
-  m1.at(0, 1) = 2.0;
-  m1.at(1, 0) = 3.0;
-  m1.at(1, 1) = 4.0;
+    Matrix m1(2, 2, true);
+    m1.at(0, 0) = 1.0;
+    m1.at(0, 1) = 2.0;
+    m1.at(1, 0) = 3.0;
+    m1.at(1, 1) = 4.0;
 
-  // m1.print_matrix();
+    m1.print_matrix();
+  */
 
+  // This works for the addition of two matrices;
   /*
     Matrix addition = m0 + m1;
     addition.print_matrix();
   */
 
-  Matrix scalar_multiplication = m0.scalar_multiply(5.0);
-  scalar_multiplication.print_matrix();
+  // This is for the scalar multiplication of a matrix;
+  /*
+    Matrix scalar_multiplication = m0.scalar_multiply(5.0);
+    scalar_multiplication.print_matrix();
+  */
+
+  Matrix a(2, 3, false);
+  a.at(0, 0) = 1;
+  a.at(0, 1) = 2;
+  a.at(0, 2) = 3;
+  a.at(1, 0) = 4;
+  a.at(1, 1) = 5;
+  a.at(1, 2) = 6;
+
+  a.print_matrix();
+
+  Matrix b(3, 2, false);
+  b.at(0, 0) = 7;
+  b.at(0, 1) = 8;
+  b.at(1, 0) = 9;
+  b.at(1, 1) = 10;
+  b.at(2, 0) = 11;
+  b.at(2, 1) = 12;
+
+  b.print_matrix();
+
+  Matrix c = a * b;
+  c.print_matrix();
 
   return 0;
 }
