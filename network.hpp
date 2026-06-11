@@ -1,6 +1,7 @@
 #pragma once
 #include "matrix.hpp"
 #include <cmath>
+#include <vector>
 
 typedef int8_t i8;
 typedef int16_t i16;
@@ -32,5 +33,24 @@ struct Layer {
 
   Matrix forward(Matrix &input) {
     return (weights * input + bias).apply(sigmoid);
+  }
+};
+
+struct Network {
+  std::vector<Layer> layers;
+
+  Network() {}
+
+  void add_layer(i64 inputs, i64 outputs) {
+    layers.push_back(Layer(inputs, outputs));
+  }
+
+  Matrix forward(Matrix &input) {
+    Matrix current = input;
+    for (auto &layer : layers) {
+      current = layer.forward(current);
+    }
+
+    return current;
   }
 };

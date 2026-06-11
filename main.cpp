@@ -122,5 +122,18 @@ int main() {
     Matrix output = test.forward(input);
     output.print_matrix();
   */
+
+  // Network test -> 2 -> 3 -> 1;
+  /*
+    Network net;
+    net.add_layer(2, 3); // 2 inputs -> 3 hidden
+    net.add_layer(3, 1); // 3 hidden -> 1 output
+    Matrix input(2, 1, false);
+    input.at(0, 0) = 1.0;
+    input.at(1, 0) = 0.0;
+    Matrix output = net.forward(input);
+    output.print_matrix();
+  */
+
   return 0;
 }
