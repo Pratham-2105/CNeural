@@ -62,7 +62,18 @@ struct Matrix {
     return matrix[i * cols + j];
   }
 
-  void print_matrix() {
+  Scalar at(i64 i, i64 j) const {
+    if (i < 0 || i >= rows) {
+      throw std::invalid_argument("ROWS ARE out-of-bounds UPON at()");
+    }
+    if (j < 0 || j >= cols) {
+      throw std::invalid_argument("COLS ARE out-of-bounds UPON at()");
+    }
+
+    return matrix[i * cols + j];
+  }
+
+  void print_matrix() const {
     for (i64 i = 0; i < rows; ++i) {
       for (i64 j = 0; j < cols; ++j) {
         std::cout << at(i, j) << " ";
@@ -74,7 +85,7 @@ struct Matrix {
 
   // ---- element-wise addition (same dimensions) -----------------------------
   // Used in the forward pass to add the bias: W*input + b.
-  Matrix operator+(Matrix &other_Matrix) {
+  Matrix operator+(const Matrix &other_Matrix) const {
     if (rows != other_Matrix.rows || cols != other_Matrix.cols) {
       throw std::invalid_argument("INVALID ROW or COLUMN");
     }
@@ -92,7 +103,7 @@ struct Matrix {
 
   // ---- element-wise subtraction (same dimensions) --------------------------
   // Used for error (prediction - target) and the weight update.
-  Matrix operator-(Matrix &other_Matrix) {
+  Matrix operator-(const Matrix &other_Matrix) const {
     if (rows != other_Matrix.rows || cols != other_Matrix.cols) {
       throw std::invalid_argument("INVALID ROW or COLUMN");
     }
@@ -110,7 +121,7 @@ struct Matrix {
 
   // ---- scalar multiply (every element x a number) --------------------------
   // Used for the gradient-descent step: weights - learning_rate * gradient.
-  Matrix scalar_multiply(f64 scalar_number) {
+  Matrix scalar_multiply(f64 scalar_number) const {
     Matrix new_Matrix(rows, cols, false);
 
     for (i64 i = 0; i < rows; ++i) {
@@ -125,7 +136,7 @@ struct Matrix {
   // ---- matrix multiplication: (m x n)(n x p) = (m x p) ---------------------
   // THE forward pass. Inner dimensions must match (cols == other.rows).
   // NOTE: this is the dot-product product, NOT element-wise (see hadamard).
-  Matrix operator*(Matrix &other_Matrix) {
+  Matrix operator*(const Matrix &other_Matrix) const {
     if (cols != other_Matrix.rows) {
       throw std::invalid_argument(
           "INVALID DIMENSIONS FOR matrix-multiplication");
@@ -150,7 +161,7 @@ struct Matrix {
 
   // ---- transpose: (m x n) -> (n x p) ---------------------------------------
   // Needed in backprop to push error backward through a layer.
-  Matrix transpose() {
+  Matrix transpose() const {
     Matrix result(cols, rows, false);
 
     for (i64 i = 0; i < rows; ++i) {
@@ -165,7 +176,7 @@ struct Matrix {
   // ---- apply: run a Scalar->Scalar function on every element ---------------
   // How activations (sigmoid, ReLU, ...) hit a whole matrix. Templated so the
   // function is resolved at compile time and inlined.
-  template <typename F> Matrix apply(F func) {
+  template <typename F> Matrix apply(F func) const {
     Matrix result(rows, cols, false);
 
     for (i64 i = 0; i < rows; ++i) {
@@ -179,7 +190,7 @@ struct Matrix {
 
   // ---- hadamard: element-wise multiply (same dimensions) -------------------
   // NOT matrix multiply. Used in backprop: error (x) activation-derivative.
-  Matrix hadamard(Matrix &other_Matrix) {
+  Matrix hadamard(const Matrix &other_Matrix) const {
     if (rows != other_Matrix.rows || cols != other_Matrix.cols) {
       throw std::invalid_argument("ROWS or COLS must be same for hadamard");
     }
