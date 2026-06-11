@@ -1,4 +1,5 @@
 #include "matrix.hpp"
+#include "network.hpp"
 
 // ============================================================================
 //  main — usage examples + checks (each verified by hand on known values)
@@ -96,6 +97,30 @@ int main() {
     b.at(1, 1) = 8;
     Matrix h = a.hadamard(b);
     h.print_matrix();
+  */
+
+  // sigmoid_derivative Function Tester:
+
+  /*
+    Scalar test_sigmoid0 = 0.0;
+    Scalar test_sigmoid1 = -100.0;
+    Scalar test_sigmoid2 = 100.0
+
+    std::cout << sigmoid_derivative(test_sigmoid0) << '\n';
+    std::cout << sigmoid_derivative(test_sigmoid1) << '\n';
+    std::cout << sigmoid_derivative(test_sigmoid2) << '\n';
+  */
+
+  // Latyers test -> single layer forward pass;
+  /*
+    Layer test(3, 2);
+    Matrix input(3, 1, false);
+    input.at(0, 0) = 1.0;
+    input.at(1, 0) = 0.5;
+    input.at(2, 0) = -0.5;
+
+    Matrix output = test.forward(input);
+    output.print_matrix();
   */
   return 0;
 }

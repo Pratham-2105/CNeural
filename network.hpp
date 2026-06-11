@@ -23,3 +23,14 @@ Scalar sigmoid_derivative(Scalar x) {
   x = sigmoid(x);
   return x * (1 - x);
 }
+
+struct Layer {
+  Matrix weights, bias;
+
+  Layer(i64 inputs, i64 outputs)
+      : weights(outputs, inputs, true), bias(outputs, 1, true) {}
+
+  Matrix forward(Matrix &input) {
+    return (weights * input + bias).apply(sigmoid);
+  }
+};
