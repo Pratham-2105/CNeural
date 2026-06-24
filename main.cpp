@@ -155,6 +155,8 @@ int main() {
 
   */
 
+  // MSE LOSS TEST
+  /*
   Matrix prediction(2, 1, false);
   prediction.at(0, 0) = 0.5;
   prediction.at(1, 0) = 0.5;
@@ -164,5 +166,29 @@ int main() {
   target.at(1, 0) = 0.0;
 
   std::cout << "MSE loss: " << mse_loss(prediction, target) << '\n';
+  */
+
+  /*******************************************************************/
+
+  Layer test(2, 3);
+  Matrix in(2, 1, false);
+  in.at(0, 0) = 0.5;
+  in.at(1, 0) = -0.5;
+  test.forward(in);
+
+  Matrix y(3, 1, false);
+  y.at(0, 0) = 1.0;
+  y.at(1, 0) = 0.0;
+  y.at(2, 0) = 1.0;
+
+  Matrix delta = (test.a - y).hadamard(test.z.apply(sigmoid_derivative));
+  delta.print_matrix();
+
+  std::cout << "a:\n";
+  test.a.print_matrix();
+
+  std::cout << "delta:\n";
+  delta.print_matrix();
+
   return 0;
 }
