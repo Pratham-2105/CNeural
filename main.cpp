@@ -135,5 +135,21 @@ int main() {
     output.print_matrix();
   */
 
+  Layer test(2, 3);
+
+  Matrix in(2, 1, false);
+  in.at(0, 0) = 0.5;
+  in.at(1, 0) = -0.5;
+
+  Matrix out = test.forward(in);
+
+  std::cout << "z (pre-activation):\n";
+  test.z.print_matrix();
+
+  std::cout << "a (activation):\n";
+  test.a.print_matrix();
+
+  std::cout << "input (stored):\n";
+  test.input.print_matrix();
   return 0;
 }

@@ -3,21 +3,6 @@
 #include <cmath>
 #include <vector>
 
-typedef int8_t i8;
-typedef int16_t i16;
-typedef int32_t i32;
-typedef int64_t i64;
-
-typedef uint8_t u8;
-typedef uint16_t u16;
-typedef uint32_t u32;
-typedef uint64_t u64;
-
-typedef float f32;
-typedef double f64;
-
-using Scalar = f64;
-
 Scalar sigmoid(Scalar x) { return 1.0 / (1.0 + std::exp(-x)); }
 
 Scalar sigmoid_derivative(Scalar x) {
@@ -27,12 +12,18 @@ Scalar sigmoid_derivative(Scalar x) {
 
 struct Layer {
   Matrix weights, bias;
+  Matrix input, z, a;
 
   Layer(i64 inputs, i64 outputs)
-      : weights(outputs, inputs, true), bias(outputs, 1, true) {}
+      : weights(outputs, inputs, true), bias(outputs, 1, true),
+        input(1, 1, false), z(1, 1, false), a(1, 1, false) {}
 
-  Matrix forward(Matrix &input) {
-    return (weights * input + bias).apply(sigmoid);
+  Matrix forward(Matrix &in) {
+    input = in;
+    z = weights * input + bias;
+    a = z.apply(sigmoid);
+
+    return a;
   }
 };
 
