@@ -206,16 +206,39 @@ int main() {
   Matrix y(1, 1, false);
   y.at(0, 0) = 1.0;
 
+  // --- BP1: output layer delta ---
   Matrix output_delta =
       (output.a - y).hadamard(output.z.apply(sigmoid_derivative));
 
+  // --- BP2: hidden layer delta ---
   Matrix hidden_delta = (output.weights.transpose() * output_delta)
                             .hadamard(hidden.z.apply(sigmoid_derivative));
 
+  /*
   std::cout << "output_delta (1x1):\n";
   output_delta.print_matrix();
   std::cout << "hidden_delta (should be 3x1):\n";
   hidden_delta.print_matrix();
+  */
+
+  // --- BP3: bias gradient = delta (nothing to compute) ---
+  Matrix output_bias_grad = output_delta;
+  Matrix hidden_bias_grad = hidden_delta;
+
+  // --- BP4: weight gradient = delta * input^T
+  Matrix output_weight_grad = output_delta * output.input.transpose();
+  Matrix hidden_weight_grad = hidden_delta * hidden.input.transpose();
+
+  // --- shape checks ---
+  std::cout << "output_weight_grad (should be 1x3, matches output.weights):\n";
+  output_weight_grad.print_matrix();
+  std::cout << "output_bias_grad (should be 1x1):\n";
+  output_bias_grad.print_matrix();
+
+  std::cout << "hidden_weight_grad (should be 3x2, matches hidden.weights):\n";
+  hidden_weight_grad.print_matrix();
+  std::cout << "hidden_bias_grad (should be 3x1):\n";
+  hidden_bias_grad.print_matrix();
 
   return 0;
 }
