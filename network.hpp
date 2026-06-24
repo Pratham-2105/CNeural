@@ -18,7 +18,7 @@ struct Layer {
       : weights(outputs, inputs, true), bias(outputs, 1, true),
         input(1, 1, false), z(1, 1, false), a(1, 1, false) {}
 
-  Matrix forward(Matrix &in) {
+  Matrix forward(const Matrix &in) {
     input = in;
     z = weights * input + bias;
     a = z.apply(sigmoid);

@@ -206,6 +206,7 @@ int main() {
   Matrix y(1, 1, false);
   y.at(0, 0) = 1.0;
 
+  std::cout << "loss BEFORE: " << mse_loss(o_out, y) << '\n';
   // --- BP1: output layer delta ---
   Matrix output_delta =
       (output.a - y).hadamard(output.z.apply(sigmoid_derivative));
@@ -214,12 +215,10 @@ int main() {
   Matrix hidden_delta = (output.weights.transpose() * output_delta)
                             .hadamard(hidden.z.apply(sigmoid_derivative));
 
-  /*
   std::cout << "output_delta (1x1):\n";
   output_delta.print_matrix();
   std::cout << "hidden_delta (should be 3x1):\n";
   hidden_delta.print_matrix();
-  */
 
   // --- BP3: bias gradient = delta (nothing to compute) ---
   Matrix output_bias_grad = output_delta;
@@ -239,6 +238,16 @@ int main() {
   hidden_weight_grad.print_matrix();
   std::cout << "hidden_bias_grad (should be 3x1):\n";
   hidden_bias_grad.print_matrix();
+
+  Scalar lr = 0.1;
+  output.weights = output.weights - output_weight_grad.scalar_multiply(lr);
+  output.bias = output.bias - output_bias_grad.scalar_multiply(lr);
+  hidden.weights = hidden.weights - hidden_weight_grad.scalar_multiply(lr);
+  hidden.bias = hidden.bias - hidden_bias_grad.scalar_multiply(lr);
+
+  // forward AGAIN with the same input, using the updated weights
+  Matrix o_out2 = output.forward(hidden.forward(in));
+  std::cout << "loss AFTER:  " << mse_loss(o_out2, y) << '\n';
 
   return 0;
 }
