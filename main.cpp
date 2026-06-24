@@ -135,6 +135,7 @@ int main() {
     output.print_matrix();
   */
 
+  /*
   Layer test(2, 3);
 
   Matrix in(2, 1, false);
@@ -151,5 +152,17 @@ int main() {
 
   std::cout << "input (stored):\n";
   test.input.print_matrix();
+
+  */
+
+  Matrix prediction(2, 1, false);
+  prediction.at(0, 0) = 0.5;
+  prediction.at(1, 0) = 0.5;
+
+  Matrix target(2, 1, false);
+  target.at(0, 0) = 1.0;
+  target.at(1, 0) = 0.0;
+
+  std::cout << "MSE loss: " << mse_loss(prediction, target) << '\n';
   return 0;
 }

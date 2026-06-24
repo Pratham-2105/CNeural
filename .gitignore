@@ -5,7 +5,8 @@ matrix
 jneural
 jn
 cneural
-
+main
+main.exe 
 # Debug
 *.dSYM/
 

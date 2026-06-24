@@ -45,3 +45,18 @@ struct Network {
     return current;
   }
 };
+
+Scalar mse_loss(const Matrix &prediction, const Matrix &target) {
+  Matrix error = prediction - target;
+  error = error.apply([](Scalar x) { return x * x; });
+
+  Scalar sum = 0;
+
+  for (Scalar it : error.matrix) {
+    sum += it;
+  }
+
+  sum *= 0.5;
+
+  return sum;
+}
