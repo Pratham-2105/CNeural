@@ -170,6 +170,7 @@ int main() {
 
   /*******************************************************************/
 
+  /*
   Layer test(2, 3);
   Matrix in(2, 1, false);
   in.at(0, 0) = 0.5;
@@ -189,6 +190,32 @@ int main() {
 
   std::cout << "delta:\n";
   delta.print_matrix();
+
+  */
+
+  Layer hidden(2, 3);
+  Layer output(3, 1);
+
+  Matrix in(2, 1, false);
+  in.at(0, 0) = 0.5;
+  in.at(1, 0) = -0.5;
+
+  Matrix h_out = hidden.forward(in);
+  Matrix o_out = output.forward(h_out);
+
+  Matrix y(1, 1, false);
+  y.at(0, 0) = 1.0;
+
+  Matrix output_delta =
+      (output.a - y).hadamard(output.z.apply(sigmoid_derivative));
+
+  Matrix hidden_delta = (output.weights.transpose() * output_delta)
+                            .hadamard(hidden.z.apply(sigmoid_derivative));
+
+  std::cout << "output_delta (1x1):\n";
+  output_delta.print_matrix();
+  std::cout << "hidden_delta (should be 3x1):\n";
+  hidden_delta.print_matrix();
 
   return 0;
 }
