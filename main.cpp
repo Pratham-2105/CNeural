@@ -1,5 +1,6 @@
 #include "matrix.hpp"
 #include "network.hpp"
+#include <vector>
 
 // ============================================================================
 //  main — usage examples + checks (each verified by hand on known values)
@@ -193,6 +194,7 @@ int main() {
 
   */
 
+  /*
   Layer hidden(2, 3);
   Layer output(3, 1);
 
@@ -248,6 +250,97 @@ int main() {
   // forward AGAIN with the same input, using the updated weights
   Matrix o_out2 = output.forward(hidden.forward(in));
   std::cout << "loss AFTER:  " << mse_loss(o_out2, y) << '\n';
+  */
+
+  std::vector<Matrix> inputs;
+  std::vector<Matrix> targets;
+
+  // XOR data
+  Matrix in0(2, 1, false);
+  in0.at(0, 0) = 0;
+  in0.at(1, 0) = 0;
+  Matrix t0(1, 1, false);
+  t0.at(0, 0) = 0;
+  inputs.push_back(in0);
+  targets.push_back(t0);
+
+  Matrix in1(2, 1, false);
+  in1.at(0, 0) = 0;
+  in1.at(1, 0) = 1;
+  Matrix t1(1, 1, false);
+  t1.at(0, 0) = 1;
+  inputs.push_back(in1);
+  targets.push_back(t1);
+
+  Matrix in2(2, 1, false);
+  in2.at(0, 0) = 1;
+  in2.at(1, 0) = 0;
+  Matrix t2(1, 1, false);
+  t2.at(0, 0) = 1;
+  inputs.push_back(in2);
+  targets.push_back(t2);
+
+  Matrix in3(2, 1, false);
+  in3.at(0, 0) = 1;
+  in3.at(1, 0) = 1;
+  Matrix t3(1, 1, false);
+  t3.at(0, 0) = 0;
+  inputs.push_back(in3);
+  targets.push_back(t3);
+
+  Network net;
+  net.add_layer(2, 3);
+  net.add_layer(3, 1);
+
+  Scalar lr = 0.5;
+  i64 epochs = 10000;
+
+  for (i64 epoch = 0; epoch < epochs; ++epoch) {
+    Scalar total_loss = 0;
+
+    for (size_t ex = 0; ex < inputs.size(); ++ex) {
+      Matrix h_out = net.layers[0].forward(inputs[ex]);
+      Matrix o_out = net.layers[1].forward(h_out);
+      total_loss += mse_loss(o_out, targets[ex]);
+
+      Matrix output_delta =
+          (net.layers[1].a - targets[ex])
+              .hadamard(net.layers[1].z.apply(sigmoid_derivative));
+
+      Matrix hidden_delta =
+          (net.layers[1].weights.transpose() * output_delta)
+              .hadamard(net.layers[0].z.apply(sigmoid_derivative));
+      Matrix output_bias_grad = output_delta;
+      Matrix hidden_bias_grad = hidden_delta;
+
+      Matrix output_weight_grad =
+          output_delta * net.layers[1].input.transpose();
+      Matrix hidden_weight_grad =
+          hidden_delta * net.layers[0].input.transpose();
+
+      net.layers[1].weights =
+          net.layers[1].weights - output_weight_grad.scalar_multiply(lr);
+      net.layers[1].bias =
+          net.layers[1].bias - output_bias_grad.scalar_multiply(lr);
+
+      net.layers[0].weights =
+          net.layers[0].weights - hidden_weight_grad.scalar_multiply(lr);
+      net.layers[0].bias =
+          net.layers[0].bias - hidden_bias_grad.scalar_multiply(lr);
+    }
+
+    if (epoch % 1000 == 0)
+      std::cout << "epoch " << epoch << " loss " << total_loss << "\n";
+  }
+
+  std::cout << "\n--- trained predictions ---\n";
+  for (size_t ex = 0; ex < inputs.size(); ++ex) {
+    Matrix h = net.layers[0].forward(inputs[ex]);
+    Matrix o = net.layers[1].forward(h);
+
+    std::cout << "input " << ex << " -> " << o.at(0, 0) << " (target "
+              << targets[ex].at(0, 0) << ")\n";
+  }
 
   return 0;
 }
