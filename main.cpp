@@ -361,35 +361,55 @@ int main() {
   /***********************************************************************************/
   // TRAINING ON THE MNIST DATASET;
 
-  std::ifstream file("data/train-images-idx3-ubyte", std::ios::binary);
+  /*
+    std::ifstream file("data/train-images-idx3-ubyte", std::ios::binary);
 
-  if (!file) {
-    std::cerr << "can't open\n";
+    if (!file) {
+      std::cerr << "can't open\n";
+      return 1;
+    }
+
+    u32 magic = read_u32_big_endian(file);
+    u32 count = read_u32_big_endian(file);
+    u32 rows = read_u32_big_endian(file);
+    u32 cols = read_u32_big_endian(file);
+
+    std::cout << magic << " " << count << " " << rows << " " << cols << "\n";
+
+    Matrix img(784, 1, false);
+
+    for (u32 i = 0; i < 784; ++i) {
+      unsigned char pixel_byte;
+      file.read(reinterpret_cast<char *>(&pixel_byte), 1);
+
+      img.at(i, 0) = pixel_byte / 255.0;
+    }
+
+    for (i64 r = 0; r < 28; ++r) {
+      for (i64 c = 0; c < 28; ++c) {
+        Scalar v = img.at(r * 28 + c, 0);
+        std::cout << (v > 0.5 ? '#' : ' ');
+      }
+      std::cout << '\n';
+    }
+
+    */
+
+  std::ifstream labels_file("data/train-labels-idx1-ubyte", std::ios::binary);
+
+  if (!labels_file) {
+    std::cerr << "can't open labels_file\n";
     return 1;
   }
 
-  u32 magic = read_u32_big_endian(file);
-  u32 count = read_u32_big_endian(file);
-  u32 rows = read_u32_big_endian(file);
-  u32 cols = read_u32_big_endian(file);
+  u32 magic = read_u32_big_endian(labels_file);
+  u32 count = read_u32_big_endian(labels_file);
 
-  std::cout << magic << " " << count << " " << rows << " " << cols << "\n";
+  std::cout << magic << " " << count << "\n";
 
-  Matrix img(784, 1, false);
+  unsigned char label;
+  labels_file.read(reinterpret_cast<char *>(&label), 1);
 
-  for (u32 i = 0; i < 784; ++i) {
-    unsigned char pixel_byte;
-    file.read(reinterpret_cast<char *>(&pixel_byte), 1);
-
-    img.at(i, 0) = pixel_byte / 255.0;
-  }
-
-  for (i64 r = 0; r < 28; ++r) {
-    for (i64 c = 0; c < 28; ++c) {
-      Scalar v = img.at(r * 28 + c, 0);
-      std::cout << (v > 0.5 ? '#' : ' ');
-    }
-    std::cout << '\n';
-  }
+  std::cout << (int)label << "\n";
   return 0;
 }
