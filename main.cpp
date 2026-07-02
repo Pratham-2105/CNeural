@@ -374,5 +374,22 @@ int main() {
   u32 cols = read_u32_big_endian(file);
 
   std::cout << magic << " " << count << " " << rows << " " << cols << "\n";
+
+  Matrix img(784, 1, false);
+
+  for (u32 i = 0; i < 784; ++i) {
+    unsigned char pixel_byte;
+    file.read(reinterpret_cast<char *>(&pixel_byte), 1);
+
+    img.at(i, 0) = pixel_byte / 255.0;
+  }
+
+  for (i64 r = 0; r < 28; ++r) {
+    for (i64 c = 0; c < 28; ++c) {
+      Scalar v = img.at(r * 28 + c, 0);
+      std::cout << (v > 0.5 ? '#' : ' ');
+    }
+    std::cout << '\n';
+  }
   return 0;
 }
