@@ -13,6 +13,14 @@ u32 read_u32_big_endian(std::ifstream &file) {
   return result;
 }
 
+Matrix one_hot(unsigned char label) {
+  Matrix label_for_test(10, 1, false);
+  int number = (int)label;
+
+  label_for_test.at(number, 0) = 1.0;
+
+  return label_for_test;
+}
 // ============================================================================
 //  main — usage examples + checks (each verified by hand on known values)
 //  Uncomment a block to run that example.
@@ -395,6 +403,8 @@ int main() {
 
     */
 
+  /* READING THE LABELS ON THE FILE */
+
   std::ifstream labels_file("data/train-labels-idx1-ubyte", std::ios::binary);
 
   if (!labels_file) {
@@ -411,5 +421,9 @@ int main() {
   labels_file.read(reinterpret_cast<char *>(&label), 1);
 
   std::cout << (int)label << "\n";
+
+  Matrix test_label = one_hot(label);
+  test_label.print_matrix();
+
   return 0;
 }
