@@ -1,26 +1,9 @@
 #include "matrix.hpp"
+#include "mnist.hpp"
 #include "network.hpp"
 #include <fstream>
 #include <vector>
 
-u32 read_u32_big_endian(std::ifstream &file) {
-  unsigned char b[4];
-
-  file.read(reinterpret_cast<char *>(b), 4);
-
-  u32 result =
-      (u32(b[0]) << 24) | (u32(b[1]) << 16) | (u32(b[2]) << 8) | u32(b[3]);
-  return result;
-}
-
-Matrix one_hot(unsigned char label) {
-  Matrix label_for_test(10, 1, false);
-  int number = (int)label;
-
-  label_for_test.at(number, 0) = 1.0;
-
-  return label_for_test;
-}
 // ============================================================================
 //  main — usage examples + checks (each verified by hand on known values)
 //  Uncomment a block to run that example.
@@ -405,6 +388,7 @@ int main() {
 
   /* READING THE LABELS ON THE FILE */
 
+  /*
   std::ifstream labels_file("data/train-labels-idx1-ubyte", std::ios::binary);
 
   if (!labels_file) {
@@ -424,6 +408,36 @@ int main() {
 
   Matrix test_label = one_hot(label);
   test_label.print_matrix();
+ */
+
+  std::vector<Matrix> train_images =
+      load_images("data/train-images-idx3-ubyte");
+  std::vector<Matrix> train_labels =
+      load_labels("data/train-labels-idx1-ubyte");
+  std::vector<Matrix> test_images = load_images("data/t10k-images-idx3-ubyte");
+  std::vector<Matrix> test_labels = load_labels("data/t10k-labels-idx1-ubyte");
+
+  std::cout << "train images: " << train_images.size() << "\n";
+  std::cout << "train labels: " << train_labels.size() << "\n";
+  std::cout << "test images:  " << test_images.size() << "\n";
+  std::cout << "test labels:  " << test_labels.size() << "\n";
+
+  // render image 100 and its label — must match
+  std::cout << "\nimage 100:\n";
+  for (i64 r = 0; r < 28; ++r) {
+    for (i64 c = 0; c < 28; ++c) {
+      Scalar v = train_images[100].at(r * 28 + c, 0);
+      std::cout << (v > 0.5 ? '#' : ' ');
+    }
+    std::cout << '\n';
+  }
+
+  // argmax of the one-hot label 100
+  i64 lbl = -1;
+  for (i64 k = 0; k < 10; ++k)
+    if (train_labels[100].at(k, 0) == 1.0)
+      lbl = k;
+  std::cout << "label 100: " << lbl << "\n";
 
   return 0;
 }
