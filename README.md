@@ -4,14 +4,6 @@ A feedforward neural network built from scratch in C++ — no libraries, no fram
 
 The goal isn't to build a fast neural network. It's to understand the machine end to end: every matrix multiply, every gradient, every weight update written and verified by hand.
 
-## Status
-
-- [x] **Stage 0** — Matrix library (7 operations, hand-verified, const-correct)
-- [x] **Stage 1** — Forward pass (sigmoid, Layer, Network)
-- [x] **Stage 2** — Backpropagation + gradient descent — **learns XOR**
-- [ ] **Stage 3** — MNIST handwritten digit recognition (target: 95%+ test accuracy)
-- [ ] **Stage 4** — Polish (weight save/load, softmax + cross-entropy, mini-batch)
-
 ## What works right now
 
 The network learns XOR — the classic non-linearly-separable problem that requires a hidden layer. A 2→3→1 network trained with hand-written backprop:
